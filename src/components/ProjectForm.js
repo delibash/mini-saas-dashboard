@@ -149,14 +149,14 @@ export default function ProjectForm({ initialData = {}, onSubmit }) {
         <Button
           type="button"
           onClick={() => router.push('/projects')}
-          className="bg-gray-500 hover:bg-gray-600 text-white"
+          className="bg-gray-500 hover:bg-gray-600 text-white m-8"
           disabled={isSubmitting}
         >
           Cancel
         </Button>
         <Button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white"
+          className="bg-blue-600 hover:bg-blue-700 text-white m-8"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Saving...' : 'Save Project'}

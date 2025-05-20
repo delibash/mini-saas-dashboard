@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getProjects } from './../lib/api';
+import { getProjects } from '../lib/api';
 import Layout from '../components/Layout';
 import Button from '../components/UI/Button';
 

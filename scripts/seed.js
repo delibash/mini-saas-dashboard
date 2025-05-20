@@ -4,33 +4,38 @@ const Project = require('../src/models/Project');
 const dbConnect = require('../src/lib/dbConnect');
 const { faker } = require('@faker-js/faker');
 
+// Team members for assignment
+const TEAM_MEMBERS = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'];
+const STATUSES = ['active', 'on hold', 'completed', 'cancelled'];
+
 async function seedDatabase() {
   try {
+    console.log('⏳ Connecting to database...');
     await dbConnect();
     
     // Clear existing data
+    console.log('🧹 Clearing existing projects...');
     await Project.deleteMany({});
-    console.log('Cleared existing projects');
     
     // Generate fake projects
-    const statuses = ['active', 'on hold', 'completed', 'cancelled'];
-    const teamMembers = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'];
-    
+    console.log('🌱 Generating sample projects...');
     const projects = Array.from({ length: 20 }, () => ({
-      name: faker.company.catchPhrase(),
+      name: `${faker.company.buzzVerb()} ${faker.company.bsNoun()}`,
       description: faker.lorem.paragraph(),
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-      deadline: faker.date.future(),
-      assignedTo: teamMembers[Math.floor(Math.random() * teamMembers.length)],
-      budget: Math.floor(Math.random() * 100000) + 5000
+      status: STATUSES[Math.floor(Math.random() * STATUSES.length)],
+      deadline: faker.date.future({ years: 1 }),
+      assignedTo: TEAM_MEMBERS[Math.floor(Math.random() * TEAM_MEMBERS.length)],
+      budget: Math.floor(Math.random() * 90000) + 10000 // $10,000-$100,000
     }));
     
+    // Insert projects
     await Project.insertMany(projects);
-    console.log(`Successfully seeded ${projects.length} projects`);
+    console.log(`✅ Successfully seeded ${projects.length} projects`);
     
+    // Disconnect
     mongoose.disconnect();
   } catch (error) {
-    console.error('Error seeding database:', error);
+    console.error('❌ Error seeding database:', error);
     process.exit(1);
   }
 }
