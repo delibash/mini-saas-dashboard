@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getProjects } from '../lib/api';
 import Layout from '../components/Layout';
-import Button from '../components/UI/Button';
+// import Button from '../components/UI/Button';
 
 export default function Home() {
   const [recentProjects, setRecentProjects] = useState([]);
@@ -46,10 +46,10 @@ export default function Home() {
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-4">Quick Actions</h3>
           <div className="flex space-x-4">
-            <Link href="/projects/new" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            <Link href="/projects/new" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-white">
               Create New Project
             </Link>
-            <Link href="/projects" className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+            <Link href="/projects" className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-white">
               View All Projects
             </Link>
           </div>
