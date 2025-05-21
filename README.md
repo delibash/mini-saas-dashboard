@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
+A mini SaaS dashboard built with Next.js, MongoDB, and Tailwind CSS.
+
 ## Getting Started
 
 Install dependencies with ``npm i``.
