@@ -41,12 +41,6 @@ export default function Home() {
     fetchProjects()
   }, []);
 
-  // const upcomingDeadlines = projects.filter(p =>
-  //   p.status === 'active' &&
-  //   new Date(p.deadline) > new Date() &&
-  //   new Date(p.deadline) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Next 7 days
-  // ).length;
-
   // Get recent projects (first 5)
   const recentProjects = projects.slice(0, 5);
 
@@ -116,9 +110,9 @@ export default function Home() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${project.status === 'active' ? 'bg-green-100 text-green-800' :
-                              project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                                project.status === 'on hold' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-red-100 text-red-800'
+                            project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                              project.status === 'on hold' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-red-100 text-red-800'
                             }`}>
                             {project.status}
                           </span>
