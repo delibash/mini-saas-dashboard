@@ -6,6 +6,10 @@ import Layout from '../components/Layout';
 export default function Home() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [counts, setCounts] = useState({
+    total: 0,
+    filtered: 0
+  });
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 5,
@@ -15,13 +19,14 @@ export default function Home() {
 
   const fetchProjects = async (page = 1) => {
     try {
-      const { data, pagination: paginationData } = await getProjects({ 
+      const { data, counts: countData, pagination: paginationData } = await getProjects({ 
         sort: '-createdAt',
         page,
         limit: 5
       });
       console.log(data);
       setProjects(data);
+      setCounts(countData);
       setPagination(paginationData);
       setLoading(false);
     } catch (error) {
@@ -33,9 +38,6 @@ export default function Home() {
   useEffect(() => {
     fetchProjects()
   }, []);
-
-  // Calculate dashboard metrics
-  const totalProjects = projects.length;
 
   const activeProjects = projects.filter(p => p.status === 'active').length;
   const upcomingDeadlines = projects.filter(p => 
@@ -56,7 +58,7 @@ export default function Home() {
           <div className="bg-blue-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-blue-800 mb-2">Total Projects</h3>
             <p className="text-3xl font-bold">
-              {loading ? '-' : totalProjects}
+              {loading ? '-' : counts.total}
             </p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">

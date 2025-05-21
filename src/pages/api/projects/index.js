@@ -7,8 +7,7 @@ export default async function handler(req, res) {
 	switch (req.method) {
 		case "GET":
 			try {
-				// Handle filtering, searching, and pagination
-				const { status, assignedTo, search, page = 1, limit = 20 } = req.query;
+				const { status, assignedTo, search, page = 1, limit = 5 } = req.query;
 		
 				let query = {};
 		
@@ -21,27 +20,35 @@ export default async function handler(req, res) {
 				  ];
 				}
 		
+				// Get total count of all projects (without filters for the dashboard)
+				const totalProjectsCount = await Project.countDocuments({});
+				
+				// Get paginated results (with filters if any)
 				const projects = await Project.find(query)
 				  .skip((page - 1) * limit)
 				  .limit(limit)
-				  .sort({ createdAt: -1 }); // Sort by newest first
+				  .sort({ createdAt: -1 });
 		
-				const total = await Project.countDocuments(query);
+				const filteredCount = await Project.countDocuments(query);
 		
 				res.status(200).json({
 				  success: true,
 				  data: projects,
+				  counts: {
+					total: totalProjectsCount, // Total projects in database
+					filtered: filteredCount   // Count matching current filters
+				  },
 				  pagination: {
 					page: Number(page),
 					limit: Number(limit),
-					total,
-					pages: Math.ceil(total / limit),
+					total: filteredCount,
+					pages: Math.ceil(filteredCount / limit),
 				  },
 				});
 			  } catch (error) {
 				res.status(400).json({ success: false, error: error.message });
 			  }
-			  break;		
+			  break;
 		case "POST":
 			try {
 				const project = await Project.create(req.body);
