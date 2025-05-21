@@ -10,15 +10,15 @@ Run the development server:
 npm run dev
 ```
 
-The project requires a free Atlas instance [https://www.mongodb.com/products/platform/atlas-database](https://www.mongodb.com/products/platform/atlas-database) for data storage. Update your ``.env.local`` file to use the DB:
+Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+
+The project requires a free Atlas instance [https://www.mongodb.com/products/platform/atlas-database](https://www.mongodb.com/products/platform/atlas-database) for data storage. Create an ``.env.local`` file in the the root of the project and update it to use the DB:
 
 ```bash
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.example.mongodb.net/<dbname>?retryWrites=true&w=majority
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ```
 
-To seed your db instance, run ``npm run seed``.
+To seed your DB instance, run ``npm run seed``.
 
 To see your raw JSON data locally, open [http://localhost:3000/api/projects](http://localhost:3000/api/projects).
-
-Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
