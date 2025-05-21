@@ -20,6 +20,9 @@ const teamMembers = [
   { value: 'Frank', label: 'Frank' }
 ];
 
+// Set default team member (first one in the array)
+const DEFAULT_TEAM_MEMBER = teamMembers[0].value;
+
 export default function ProjectForm({ initialData = {}, onSubmit }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -27,7 +30,7 @@ export default function ProjectForm({ initialData = {}, onSubmit }) {
     description: '',
     status: 'active',
     deadline: '',
-    assignedTo: '',
+    assignedTo: DEFAULT_TEAM_MEMBER, // Set default team member here
     budget: '',
     ...initialData
   });
@@ -54,7 +57,6 @@ export default function ProjectForm({ initialData = {}, onSubmit }) {
     setErrors({});
 
     try {
-      // Convert deadline to Date object and budget to number
       const dataToSubmit = {
         ...formData,
         deadline: new Date(formData.deadline),
@@ -63,7 +65,6 @@ export default function ProjectForm({ initialData = {}, onSubmit }) {
       await onSubmit(dataToSubmit);
       router.push('/projects');
     } catch (error) {
-      console.log(error.errors)
       if (error.errors) {
         setErrors(error.errors);
       } else {
