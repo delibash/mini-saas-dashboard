@@ -17,8 +17,8 @@ MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.example.mongodb.net/<db
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ```
 
-To seed yout db, run ``npm run seed``.
+To seed your db instance, run ``npm run seed``.
 
-To see your MongoDB objects [http://localhost:3000/api/projects](http://localhost:3000/api/projects).
+To see your raw JSON data locally, open [http://localhost:3000/api/projects](http://localhost:3000/api/projects).
 
 Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.

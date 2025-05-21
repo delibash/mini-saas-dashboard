@@ -7,7 +7,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const getProjects = async (params = {}) => {
   try {
     const response = await axios.get(`${API_URL}/projects`, { params });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
