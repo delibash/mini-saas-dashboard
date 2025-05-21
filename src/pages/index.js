@@ -6,24 +6,37 @@ import Layout from '../components/Layout';
 export default function Home() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 5,
+    total: 0,
+    pages: 1
+  });
+
+  const fetchProjects = async (page = 1) => {
+    try {
+      const { data, pagination: paginationData } = await getProjects({ 
+        sort: '-createdAt',
+        page,
+        limit: 5
+      });
+      console.log(data);
+      setProjects(data);
+      setPagination(paginationData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data } = await getProjects({ sort: '-createdAt' });
-        setProjects(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+    fetchProjects()
   }, []);
 
   // Calculate dashboard metrics
   const totalProjects = projects.length;
+
   const activeProjects = projects.filter(p => p.status === 'active').length;
   const upcomingDeadlines = projects.filter(p => 
     p.status === 'active' && 
@@ -79,6 +92,7 @@ export default function Home() {
           ) : projects.length === 0 ? (
             <p>No projects found</p>
           ) : (
+            <>
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -121,6 +135,29 @@ export default function Home() {
                 </tbody>
               </table>
             </div>
+                {/* Pagination controls */}
+                <div className="flex items-center justify-between mt-4">
+                <button
+                  onClick={() => fetchProjects(pagination.page - 1)}
+                  disabled={pagination.page === 1}
+                  className={`px-4 py-2 rounded ${pagination.page === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+                >
+                  Previous
+                </button>
+                
+                <span className="text-sm text-gray-700">
+                  Page {pagination.page} of {pagination.pages}
+                </span>
+                
+                <button
+                  onClick={() => fetchProjects(pagination.page + 1)}
+                  disabled={pagination.page === pagination.pages}
+                  className={`px-4 py-2 rounded ${pagination.page === pagination.pages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+                >
+                  Next
+                </button>
+                </div>
+                </>
           )}
         </div>
       </div>

@@ -8,41 +8,40 @@ export default async function handler(req, res) {
 		case "GET":
 			try {
 				// Handle filtering, searching, and pagination
-				const { status, assignedTo, search, page = 1, limit = 10 } = req.query;
-
+				const { status, assignedTo, search, page = 1, limit = 20 } = req.query;
+		
 				let query = {};
-
+		
 				if (status) query.status = status;
 				if (assignedTo) query.assignedTo = assignedTo;
 				if (search) {
-					query.$or = [
-						{ name: { $regex: search, $options: "i" } },
-						{ description: { $regex: search, $options: "i" } },
-					];
+				  query.$or = [
+					{ name: { $regex: search, $options: "i" } },
+					{ description: { $regex: search, $options: "i" } },
+				  ];
 				}
-
+		
 				const projects = await Project.find(query)
-					.skip((page - 1) * limit)
-					.limit(limit)
-					.sort({ deadline: 1 });
-
+				  .skip((page - 1) * limit)
+				  .limit(limit)
+				  .sort({ createdAt: -1 }); // Sort by newest first
+		
 				const total = await Project.countDocuments(query);
-
+		
 				res.status(200).json({
-					success: true,
-					data: projects,
-					pagination: {
-						page: Number(page),
-						limit: Number(limit),
-						total,
-						pages: Math.ceil(total / limit),
-					},
+				  success: true,
+				  data: projects,
+				  pagination: {
+					page: Number(page),
+					limit: Number(limit),
+					total,
+					pages: Math.ceil(total / limit),
+				  },
 				});
-			} catch (error) {
-				res.status(400).json({ success: false, error: error.message, details: process.env.NODE_ENV === 'development' ? error.message : undefined });
-			}
-			break;
-
+			  } catch (error) {
+				res.status(400).json({ success: false, error: error.message });
+			  }
+			  break;		
 		case "POST":
 			try {
 				const project = await Project.create(req.body);
