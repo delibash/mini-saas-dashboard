@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "seed": "node scripts/seed.js",
-    "seed:dev": "NODE_ENV=development node scripts/seed.js",
-    "seed:prod": "NODE_ENV=production node scripts/seed.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@faker-js/faker": "^9.8.0",

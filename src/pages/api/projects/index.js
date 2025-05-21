@@ -1,5 +1,5 @@
 import dbConnect from "../../../lib/dbConnect";
-import Project from "../../../models/Project";
+import Project from "../../../models/Project.mjs";
 
 export default async function handler(req, res) {
 	await dbConnect();
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 					},
 				});
 			} catch (error) {
-				res.status(400).json({ success: false, error: error.message, details: process.env.NODE_ENV === 'development' ? err.message : undefined });
+				res.status(400).json({ success: false, error: error.message, details: process.env.NODE_ENV === 'development' ? error.message : undefined });
 			}
 			break;
 
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
 				const project = await Project.create(req.body);
 				res.status(201).json({ success: true, data: project });
 			} catch (error) {
-				res.status(400).json({ success: false, error: error.message, details: process.env.NODE_ENV === 'development' ? err.message : undefined });
+				res.status(400).json({ success: false, error: error.message, details: process.env.NODE_ENV === 'development' ? error.message : undefined });
 			}
 			break;
 

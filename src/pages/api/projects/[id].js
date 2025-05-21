@@ -1,5 +1,5 @@
 import dbConnect from '../../../lib/dbConnect';
-import Project from '../../../models/Project';
+import Project from '../../../models/Project.mjs';
 
 export default async function handler(req, res) {
   await dbConnect();
