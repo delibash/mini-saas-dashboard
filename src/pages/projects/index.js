@@ -6,6 +6,10 @@ import Layout from '../../components/Layout';
 export default function Home() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [counts, setCounts] = useState({
+    total: 0,
+    filtered: 0
+  });
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 5,
@@ -15,12 +19,13 @@ export default function Home() {
 
   const fetchProjects = async (page = 1) => {
     try {
-      const { data, pagination: paginationData } = await getProjects({ 
+      const { data, counts: countData, pagination: paginationData } = await getProjects({ 
         sort: '-createdAt',
         page,
         limit: 5
       });
       setProjects(data);
+      setCounts(countData);
       setPagination(paginationData);
       setLoading(false);
     } catch (error) {
@@ -33,8 +38,6 @@ export default function Home() {
     fetchProjects()
   }, []);
 
-  // Calculate dashboard metrics
-  const totalProjects = projects.length;
   const activeProjects = projects.filter(p => p.status === 'active').length;
   const upcomingDeadlines = projects.filter(p => 
     p.status === 'active' && 
@@ -54,7 +57,7 @@ export default function Home() {
           <div className="bg-blue-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-blue-800 mb-2">Total Projects</h3>
             <p className="text-3xl font-bold">
-              {loading ? '-' : totalProjects}
+              {loading ? '-' : counts.total}
             </p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
@@ -77,9 +80,9 @@ export default function Home() {
             <Link href="/projects/new" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
               Create New Project
             </Link>
-            <Link href="/projects" className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+            {/* <Link href="/projects" className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
               View All Projects
-            </Link>
+            </Link> */}
           </div>
         </div>
         
