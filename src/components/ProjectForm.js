@@ -63,10 +63,11 @@ export default function ProjectForm({ initialData = {}, onSubmit }) {
       await onSubmit(dataToSubmit);
       router.push('/projects');
     } catch (error) {
+      console.log(error.errors)
       if (error.errors) {
         setErrors(error.errors);
       } else {
-        setErrors({ general: error.message || 'An error occurred' });
+        setErrors({ general: error.details });
       }
     } finally {
       setIsSubmitting(false);

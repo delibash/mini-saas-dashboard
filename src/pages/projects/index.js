@@ -2,26 +2,37 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getProjects } from '../../lib/api';
 import Layout from '../../components/Layout';
-// import Button from '../../components/UI/Button';
 
 export default function Home() {
-  const [recentProjects, setRecentProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRecentProjects = async () => {
+    const fetchProjects = async () => {
       try {
-        const { data } = await getProjects({ limit: 5, sort: '-createdAt' });
-        setRecentProjects(data);
+        const { data } = await getProjects({ sort: '-createdAt' });
+        setProjects(data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching recent projects:', error);
+        console.error('Error fetching projects:', error);
         setLoading(false);
       }
     };
 
-    fetchRecentProjects();
+    fetchProjects();
   }, []);
+
+  // Calculate dashboard metrics
+  const totalProjects = projects.length;
+  const activeProjects = projects.filter(p => p.status === 'active').length;
+  const upcomingDeadlines = projects.filter(p => 
+    p.status === 'active' && 
+    new Date(p.deadline) > new Date() &&
+    new Date(p.deadline) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Next 7 days
+  ).length;
+
+  // Get recent projects (first 5)
+  const recentProjects = projects.slice(0, 5);
 
   return (
     <Layout>
@@ -31,15 +42,21 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="bg-blue-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-blue-800 mb-2">Total Projects</h3>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">
+              {loading ? '-' : totalProjects}
+            </p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-green-800 mb-2">Active Projects</h3>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">
+              {loading ? '-' : activeProjects}
+            </p>
           </div>
           <div className="bg-yellow-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-yellow-800 mb-2">Upcoming Deadlines</h3>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">
+              {loading ? '-' : upcomingDeadlines}
+            </p>
           </div>
         </div>
         
@@ -58,9 +75,9 @@ export default function Home() {
         <div>
           <h3 className="text-xl font-semibold mb-4">Recent Projects</h3>
           {loading ? (
-            <p>Loading recent projects...</p>
-          ) : recentProjects.length === 0 ? (
-            <p>No recent projects</p>
+            <p>Loading projects...</p>
+          ) : projects.length === 0 ? (
+            <p>No projects found</p>
           ) : (
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
@@ -69,6 +86,7 @@ export default function Home() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deadline</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -91,6 +109,12 @@ export default function Home() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {new Date(project.deadline).toLocaleDateString()}
+                        {project.status === 'active' && new Date(project.deadline) < new Date() && (
+                          <span className="ml-2 text-xs text-red-500">(Overdue)</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {project.assignedTo}
                       </td>
                     </tr>
                   ))}
